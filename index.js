@@ -337,23 +337,6 @@ function arrayIsSubset(arr1, arr2) {
   return arr1.every(char => arr2.includes(char));
 }
 
-function removeSubsets(array) {
-  const newArray = array;
-
-  array.forEach((element, i, arr) => {
-    for (let val of arr) {
-      if (val[0].length >= element[0].length && val != element) {
-        if (arrayIsSubset(element[0], val[0])) {
-          newArray.splice(i, 1);
-          break;
-        };
-      };
-    };
-  });
-
-  return newArray;
-}
-
 function getExistingStations(array) {
   if (array.length > 2) {
     array.splice(0, 1);
@@ -365,14 +348,14 @@ function getExistingStations(array) {
 function getAllPairs(arr1, arr2) {
   const newArray = [];
 
-  for (var i = 0; i < arr1.length - 1; i++) {
-    for (var j = i + 1; j < arr2.length - 1; j++) {
-      let currentArray = arr1[i];
-      let currentStation = arr2[j];
+  for (let i = 0; i < arr1.length - 1; i++) {
+    for (let j = i + 1; j < arr2.length - 1; j++) {
+      const currentArray = arr1[i];
+      const currentStation = arr2[j];
       if (!currentArray.includes(currentStation)) {
         const isSubset = arrayIsSubset(currentStation[0], currentArray[0]);
         if (!isSubset) {
-          const concatenated = currentArray[0].concat(currentStation[0])
+          const concatenated = currentArray[0].concat(currentStation[0]);
           const currentUniqueValues = removeDuplicates(concatenated).sort();
           const existingStations = getExistingStations(currentArray);
           newArray.push([currentUniqueValues, ...existingStations, currentStation]);
@@ -418,16 +401,15 @@ function printResult(array) {
     `\n\nPossible results: \n${printStations(array)}`
 }
 
-function main() {
-  const sortedList = formatArray(stations)
+function main(stations) {
+  const uniqueList = formatArray(stations)
     .map(reduceFirstValueToUniqueArray)
-    .sort(sortByFirstElement);
+    .sort(sortByFirstElement)
+    .reverse();
 
-  const uniqueList = removeSubsets(sortedList).reverse();
-  const originalList = uniqueList;
-  const minStations = getMinElements(uniqueList, originalList);
+  const minStations = getMinElements(uniqueList, uniqueList);
 
   return printResult(minStations);
 }
 
-console.log(main());
+console.log(main(stations));
